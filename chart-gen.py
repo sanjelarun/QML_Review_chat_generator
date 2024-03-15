@@ -57,7 +57,7 @@ def save_plot_top_publishers(data):
     ax = sns.countplot(data=filtered_data, y='Publication Title', order=top_publishers.index, color="#ADD8E6")
     plt.xlabel("Number of Papers", fontsize=16)
     plt.ylabel("Publisher", fontsize=16)
-    ax.set_yticklabels(['Missing PUblishers'] + [item.get_text() for item in ax.get_yticklabels()[1:]])
+    ax.set_yticklabels(['Missing Publishers', 'arXiv'] + [item.get_text() for item in ax.get_yticklabels()[2:]])
     plt.tight_layout()
     plt.savefig("top_publishers.png", dpi=500)
     plt.close()
