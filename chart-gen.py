@@ -8,7 +8,8 @@ def save_plot_publications_by_year(data):
     
     plt.figure(figsize=(13, 9))
     year_counts = data['Publication Year'].value_counts().sort_values(ascending=False)
-    ax = sns.barplot(x=year_counts.index, y=year_counts.values, color='blue', order=year_counts.index)
+    year_counts = year_counts[year_counts.index != 2024]  # Remove year 2024
+    ax = sns.barplot(x=year_counts.index, y=year_counts.values, color='#ADD8E6', order=year_counts.index)
     
     plt.ylabel("Number of Papers", fontsize=16)
     plt.xlabel("Published Year", fontsize=16)
@@ -21,7 +22,7 @@ def save_plot_publications_by_year(data):
 
 def save_plot_papers_by_type(data):
     plt.figure(figsize=(12, 8))
-    ax = sns.countplot(data=data, x='Item Type', order=data['Item Type'].value_counts().index, color="blue")
+    ax = sns.countplot(data=data, x='Item Type', order=data['Item Type'].value_counts().index, color="#ADD8E6")
     plt.ylabel("Number of Papers", fontsize=16)
     plt.xlabel("Publication Type", fontsize=16)
     plt.xticks(rotation=45, fontsize=16)
@@ -37,7 +38,7 @@ def save_plot_authors_per_paper(data):
     data['Author Count'] = data['Author'].apply(lambda x: len(str(x).split(";")) if pd.notnull(x) else 0)
     author_count_counts = data['Author Count'].value_counts().sort_values(ascending=False)
     plt.figure(figsize=(12, 8))
-    ax = sns.barplot(x=author_count_counts.index, y=author_count_counts.values, color="blue", order=author_count_counts.index)
+    ax = sns.barplot(x=author_count_counts.index, y=author_count_counts.values, color="#ADD8E6", order=author_count_counts.index)
     plt.ylabel("Number of Papers", fontsize=16)
     plt.xlabel("Number of Authors", fontsize=16)
     
@@ -48,13 +49,15 @@ def save_plot_authors_per_paper(data):
     plt.savefig("authors_per_paper.png", dpi=500)
     plt.close()
 
+
 def save_plot_top_publishers(data):
-    top_publishers = data['Publication Title'].value_counts().head(10).index
-    filtered_data = data[data['Publication Title'].isin(top_publishers)]
+    top_publishers = data['Publication Title'].value_counts().head(10)
+    filtered_data = data[data['Publication Title'].isin(top_publishers.index)]
     plt.figure(figsize=(12, 8))
-    sns.countplot(data=filtered_data, y='Publication Title', order=top_publishers, color="blue")
+    ax = sns.countplot(data=filtered_data, y='Publication Title', order=top_publishers.index, color="#ADD8E6")
     plt.xlabel("Number of Papers", fontsize=16)
     plt.ylabel("Publisher", fontsize=16)
+    ax.set_yticklabels(['Missing PUblishers'] + [item.get_text() for item in ax.get_yticklabels()[1:]])
     plt.tight_layout()
     plt.savefig("top_publishers.png", dpi=500)
     plt.close()
